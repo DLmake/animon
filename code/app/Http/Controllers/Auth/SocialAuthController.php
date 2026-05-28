@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+
+// TASK 3-E: Google OAuth controller
+// Two methods that together handle the entire Google login flow.
+
+class SocialAuthController extends Controller
+{
+    // GET /auth/google
+    // Step 1 of OAuth: send the user to Google's login page.
+    // Socialite builds the correct Google URL using your GOOGLE_CLIENT_ID from .env
+    public function redirect(): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        // TODO: return Socialite::driver('google')->redirect();
+    }
+
+    // GET /auth/google/callback
+    // Step 2 of OAuth: Google sends the user back here with a temporary code.
+    // We exchange that code for a user profile from Google.
+    public function callback(): \Illuminate\Http\RedirectResponse
+    {
+        // Step 1: Wrap in try/catch — user may deny access
+        // try {
+        //     $googleUser = Socialite::driver('google')->user();
+        // } catch (\Exception $e) {
+        //     return redirect()->route('login')->withErrors(['google' => 'Google login failed.']);
+        // }
+
+        // Step 2: Find existing user by google_id, or fall back to email match
+        // $user = User::where('google_id', $googleUser->getId())->first()
+        //      ?? User::where('email', $googleUser->getEmail())->first();
+
+        // Step 3a: If user exists, update their google_id and avatar
+        // if ($user) {
+        //     $user->update([
+        //         'google_id'  => $googleUser->getId(),
+        //         'avatar_url' => $googleUser->getAvatar(),
+        //     ]);
+        // }
+
+        // Step 3b: If user doesn't exist, create a new one
+        // else {
+        //     // Auto-generate a unique username from their Google name
+        //     $base = Str::slug($googleUser->getName());
+        //     $username = $base;
+        //     $suffix = 1;
+        //     while (User::where('username', $username)->exists()) {
+        //         $username = $base . '-' . $suffix++;
+        //     }
+
+        //     $user = User::create([
+        //         'name'       => $googleUser->getName(),
+        //         'username'   => $username,
+        //         'email'      => $googleUser->getEmail(),
+        //         'google_id'  => $googleUser->getId(),
+        //         'avatar_url' => $googleUser->getAvatar(),
+        //         'password'   => null,
+        //     ]);
+        // }
+
+        // Step 4: Log the user in and send them to the dashboard
+        // Auth::login($user, remember: true);
+        // return redirect()->intended(route('dashboard'));
+    }
+}

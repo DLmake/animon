@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+
+/*
+ * ─────────────────────────────────────────────
+ *  ANIMON DESIGN TOKENS
+ *  Change these to completely retheme the app.
+ *  Every --color-brand-* becomes a Tailwind class:
+ *    bg-brand-500, text-brand-400, border-brand-700 etc.
+ * ─────────────────────────────────────────────
+ */
+@theme {
+    /* Brand / accent colour — currently green. Swap the whole palette here. */
+    --color-brand-50:  #f0fdf4;
+    --color-brand-100: #dcfce7;
+    --color-brand-200: #bbf7d0;
+    --color-brand-300: #86efac;
+    --color-brand-400: #4ade80;
+    --color-brand-500: #22c55e;
+    --color-brand-600: #16a34a;
+    --color-brand-700: #15803d;
+    --color-brand-800: #166534;
+    --color-brand-900: #14532d;
+
+    /* App background / surface colours */
+    --color-surface-base:   #030712;   /* page background  */
+    --color-surface-raised: #111827;   /* cards, nav       */
+    --color-surface-hover:  #1f2937;   /* hover states     */
+    --color-border:         #1f2937;   /* subtle borders   */
+
+    /* Typography */
+    --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+
+    /* Rarity colours — used on badges and card borders */
+    --color-rarity-common:    #6b7280;
+    --color-rarity-uncommon:  #4ade80;
+    --color-rarity-rare:      #60a5fa;
+    --color-rarity-legendary: #facc15;
+}
+
+/* ─── Base styles ─────────────────────────────── */
+body {
+    background-color: var(--color-surface-base);
+    color: #f9fafb;
+}
+
+/* ─── Scrollbar (optional, dark themed) ──────── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface-base); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
