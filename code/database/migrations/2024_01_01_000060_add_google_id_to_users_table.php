@@ -19,6 +19,8 @@ return new class extends Migration
             // google_id : string, nullable, unique — Google's ID for this user
             //             ->after('email') puts it after the email column
             //             ->nullable() because email/password users won't have one
+            $table->string('google_id')->nullable()->unique()->after('email');
+            $table->string('password')->nullable()->change();
 
             // avatar_url: string(500), nullable, ->after('google_id')
             //             Profile picture URL (from Google, or uploaded manually)
