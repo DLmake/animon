@@ -39,7 +39,7 @@ return new class extends Migration
             // category: enum, required
             //   allowed values: 'animal','bird','reptile','amphibian','insect','arachnid','plant','fungi','fish'
 
-            $table->enum('category',[animal,bird,reptile,amphibian,insect,arachnid,plant,fungi,fish]);
+            $table->enum('category',['animal','bird','reptile','amphibian','insect','arachnid','plant','fungi','fish']);
 
 
             // --- Taxonomy (all nullable strings) ---
@@ -76,7 +76,7 @@ return new class extends Migration
             $table->unsignedInteger('total_sightings') -> default(0);
 
             $table->timestamps(); // always last — adds created_at and updated_at
-
+            //added three indexes instead of one
             $table->index('rarity');
             $table->index('scientific_name');
             $table->index('category');
