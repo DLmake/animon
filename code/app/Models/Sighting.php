@@ -17,36 +17,54 @@ class Sighting extends Model
         // Include: user_id, species_id, image_id, lat, lng, altitude,
         //          location_name, country_code, sighted_at,
         //          notes, ai_confidence, is_first_global
+        'user_id',
+        'species_id',
+        'image_id',
+        'location_name',
+        'lat',
+        'lang',
+        'altitude',
+        'country_code',
+        'sighted_time',
+        'notes',
+        'ai_confidence',
+        'is_first_global',
+
     ];
 
     protected function casts(): array
     {
         return [
             // TODO:
-            // 'sighted_at'     => 'datetime',
-            // 'is_first_global'=> 'boolean',
-            // 'lat'            => 'float',
-            // 'lng'            => 'float',
-            // 'ai_confidence'  => 'float',
+            'sighted_at'     => 'datetime',
+            'is_first_global'=> 'boolean',
+            'lat'            => 'float',
+            'lng'            => 'float',
+            'ai_confidence'  => 'float',
         ];
     }
 
     // RELATIONSHIP: A sighting belongs to a user
     // BelongsTo = this table has the foreign key (user_id)
     public function user(): BelongsTo
+    
     {
+        return $this->belongsTo(User::class);
         // TODO: return $this->belongsTo(User::class);
     }
 
     // RELATIONSHIP: A sighting belongs to a species
     public function species(): BelongsTo
+
     {
+        return $this->belongsTo(Species::class);
         // TODO: return $this->belongsTo(Species::class);
     }
 
     // RELATIONSHIP: A sighting belongs to an image
     public function image(): BelongsTo
-    {
+    {   
+        return $this->belongsTo(Image::class);
         // TODO: return $this->belongsTo(Image::class);
     }
 
@@ -54,10 +72,13 @@ class Sighting extends Model
     // BelongsToMany = many-to-many, needs a pivot table
     // $sighting->collections  →  joins through collection_sightings
     public function collections(): BelongsToMany
+
     {
         // TODO: return $this->belongsToMany(Collection::class, 'collection_sightings')
         //                    ->withPivot('added_at');
         // 'collection_sightings' is the pivot table name
         // withPivot('added_at') lets you access $sighting->collections->pivot->added_at
+
+        return $this->belongsToMany(Collection::class, 'collection_sightings') -> withPivot('added_at');
     }
 }
