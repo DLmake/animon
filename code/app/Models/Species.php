@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+//i used php artisan tinker for testing the models
 
 // TASK 2-A: Species model
 // A model is a PHP class that represents one row in a database table.
