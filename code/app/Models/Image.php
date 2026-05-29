@@ -17,6 +17,23 @@ class Image extends Model
         // Include: user_id, file_url, file_hash, perceptual_hash,
         //          exif_lat, exif_lng, exif_altitude, exif_timestamp,
         //          exif_device, width, height, file_size_bytes
+        'user_id',
+        'file_url',
+        'file_hash',
+        'perceptual_hash',
+        'exif_lat',
+        'exif_lng',
+        'exif_altitude',
+        'exif_timestamp',
+        'exif_device',
+        'width',
+        'height',
+        'file_size_bytes'
+
+
+
+
+
     ];
 
     protected function casts(): array
@@ -26,20 +43,26 @@ class Image extends Model
             // 'exif_timestamp' => 'datetime',
             // 'exif_lat'       => 'float',
             // 'exif_lng'       => 'float',
+            'exif_timestamp' => 'datetime',
+            'exif_lat'=> 'float',
+            'exif_lng'=> 'float',
         ];
     }
 
     // RELATIONSHIP: An image belongs to a user
     // $image->user  →  SELECT * FROM users WHERE id = images.user_id
     public function user(): BelongsTo
+        
     {
         // TODO: return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     // RELATIONSHIP: An image has one sighting (after it's been identified)
     // $image->sighting  →  SELECT * FROM sightings WHERE image_id = ?
     public function sighting(): HasOne
     {
+        return $this->HasOne(Sighting::class);
         // TODO: return $this->hasOne(Sighting::class);
     }
 }
