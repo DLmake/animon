@@ -13,12 +13,17 @@ class Collection extends Model
 {
     protected $fillable = [
         // TODO: 'user_id', 'name', 'description', 'is_public'
+        'user_id', 
+        'name',
+        'description',
+        'is_public'
     ];
 
     protected function casts(): array
     {
         return [
             // TODO: 'is_public' => 'boolean',
+            'is_public' => 'boolean'
         ];
     }
 
@@ -26,6 +31,7 @@ class Collection extends Model
     public function user(): BelongsTo
     {
         // TODO: return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     // RELATIONSHIP: A collection has many sightings (via pivot)
@@ -34,5 +40,6 @@ class Collection extends Model
     {
         // TODO: return $this->belongsToMany(Sighting::class, 'collection_sightings')
         //                    ->withPivot('added_at');
+        return $this->belongsToMany(Sighting::class, 'collection_sightings')->withPivot('added_at');
     }
 }
