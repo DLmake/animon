@@ -15,12 +15,30 @@ class Species extends Model
     // Only columns listed here can be mass-assigned (e.g. Species::create($data)).
     // This prevents users from injecting unexpected fields.
     protected $fillable = [
+
         // TODO: List every column from your species migration here as a string.
         // Example:
         // 'common_name',
         // 'scientific_name',
         // 'category',
         // ... etc
+        'common_name',
+        'scientific_name',
+        'category',
+        'kingdom',
+        'phylum',
+        'class',
+        'order_name',
+        'family',
+        'genus',
+        'description',
+        'rarity',
+        'habitat',
+        'refrence_image',
+        'ai_provider_id',
+        'ai_tags',
+        'total_sightings',
+
     ];
 
     // casts() tells Laravel how to convert database values to PHP types automatically.
@@ -31,6 +49,8 @@ class Species extends Model
             // TODO: Add these two casts:
             // 'ai_tags'      => 'array',    — stored as JSON string, returned as PHP array
             // 'first_seen_at'=> 'datetime', — returned as a Carbon date object
+            'ai_tags'       => 'array',
+            'first_seen_at' => 'datetime',
         ];
     }
 
@@ -39,17 +59,28 @@ class Species extends Model
     public function sightings(): HasMany
     {
         // TODO: return $this->hasMany(Sighting::class);
+        return $this->hasMany(Sighnting::class);
     }
 
     // HELPER METHOD: Returns a Tailwind CSS class based on rarity
     // Used in Vue templates: <span :class="species.rarity_color">
     // Note: This is sent to Vue via the model's JSON output
     public function rarityColor(): string
-    {
+    {   
         // TODO: Use a match expression to return a CSS class string:
         // legendary → 'text-yellow-400'
         // rare      → 'text-blue-400'
         // uncommon  → 'text-green-400'
         // default   → 'text-gray-400'
+
+        return match($this->rarity) {
+            'extinct' => 'text-red-400',
+            'legendary' => 'text-yellow-400',
+            'epic' => 'text-purple-400',
+            'rare'      => 'text-blue-400',
+            'uncommon'  => 'text-green-400',
+            default     => 'text-gray-400',
+        };
+        
     }
 }
