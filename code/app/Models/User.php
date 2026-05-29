@@ -19,6 +19,13 @@ class User extends Authenticatable
     protected $fillable = [
         // TODO: Add all user columns:
         // 'name', 'username', 'email', 'password', 'google_id', 'avatar_url', 'bio'
+        'name', 
+        'username', 
+        'email', 
+        'password', 
+        'google_id', 
+        'avatar_url',
+        'bio'
     ];
 
     // These fields are NEVER included when the model is converted to JSON.
@@ -39,17 +46,21 @@ class User extends Authenticatable
     public function sightings(): HasMany
     {
         // TODO: return $this->hasMany(Sighting::class);
+        return $this->hasMany(Sighting::class);
+
     }
 
     // RELATIONSHIP: A user has many images
     public function images(): HasMany
     {
         // TODO: return $this->hasMany(Image::class);
+        return $this->hasMany(Image::class);
     }
 
     // RELATIONSHIP: A user has many collections
     public function collections(): HasMany
     {
         // TODO: return $this->hasMany(Collection::class);
+        return $this->hasMany(Collection::class);
     }
 }
