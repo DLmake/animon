@@ -17,32 +17,30 @@ class SpeciesController extends Controller
     public function index(Request $request): Response
     {
         // Step 1: Start a query (doesn't hit the DB yet)
-        // $query = Species::query();
+        $query = Species::query();
 
         // Step 2: Apply optional category filter from ?category=bird in the URL
-        // if ($request->filled('category')) {
-        //     $query->where('category', $request->category);
-        // }
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
 
         // Step 3: Apply optional search from ?search=robin in the URL
-        // if ($request->filled('search')) {
-        //     $query->where(function ($q) use ($request) {
-        //         $q->where('common_name', 'like', "%{$request->search}%")
-        //           ->orWhere('scientific_name', 'like', "%{$request->search}%");
-        //     });
-        // }
+         if ($request->filled('search')) {
+             $query->where(function ($q) use ($request) {
+                 $q->where('common_name', 'like', "%{$request->search}%")
+                   ->orWhere('scientific_name', 'like', "%{$request->search}%");
+             });
+        }
 
         // Step 4: Get the IDs of species this user has already caught
         // (used in the Vue page to show caught vs unknown)
-        // $userSightingIds = Auth::check()
-        //     ? Auth::user()->sightings()->pluck('species_id')->toArray()
-        //     : [];
+        $userSightingIds = Auth::check() ? Auth::user()->sightings()->pluck('species_id')->toArray(): [];
 
         // Step 5: Paginate — 48 per page, sorted alphabetically
         // ->paginate(48) returns a LengthAwarePaginator with links for the Vue pagination
-        // $species = $query->orderBy('common_name')->paginate(48);
+        $species = $query->orderBy('common_name')->paginate(48);
 
-        return Inertia::render('Species/Index', [
+        return Inertia::render('Species/Index', [$species,$userSightingIds,$request->only(['category','search'])
             // TODO: pass 'species', 'userSightingIds', and 'filters' ($request->only(['category','search']))
         ]);
     }
@@ -54,16 +52,14 @@ class SpeciesController extends Controller
 
         // TODO:
         // Load sightings with their users:
-        // $species->load(['sightings.user']);
+        $species->load(['sightings.user']);
 
         // Check if the current user has caught this species:
-        // $caughtByUser = Auth::check()
-        //     ? $species->sightings->where('user_id', Auth::id())->isNotEmpty()
-        //     : false;
+        $caughtByUser = Auth::check() ? $species->sightings->where('user_id', Auth::id())->isNotEmpty() : false;
 
-        // return Inertia::render('Species/Show', [
-        //     'species'     => $species,
-        //     'caughtByUser'=> $caughtByUser,
-        // ]);
+        return Inertia::render('Species/Show', [
+            'species'     => $species,
+            'caughtByUser'=> $caughtByUser,
+        ]);
     }
 }
