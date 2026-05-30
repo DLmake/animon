@@ -19,5 +19,7 @@ class SightingPolicy
         // TODO: return $user->id === $sighting->user_id;
         // This compares the logged-in user's ID with the sighting's owner ID.
         // If they match → true (allowed). If not → 403 Forbidden.
+        return $user->id === $sighting->user_id;
+        
     }
 }
