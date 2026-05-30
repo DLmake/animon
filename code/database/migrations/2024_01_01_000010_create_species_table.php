@@ -39,7 +39,7 @@ return new class extends Migration
             // category: enum, required
             //   allowed values: 'animal','bird','reptile','amphibian','insect','arachnid','plant','fungi','fish'
 
-            $table->enum('category',['animal','bird','reptile','amphibian','insect','arachnid','plant','fungi','fish']);
+            $table->enum('category',['mammal','bird','reptile','amphibian','insect','arachnid','plant','fungi','fish']);
 
 
             // --- Taxonomy (all nullable strings) ---
