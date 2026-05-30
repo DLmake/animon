@@ -18,7 +18,7 @@ class MapController extends Controller
     // GET /map — just render the map page shell
     public function index(): Response
     {
-        // TODO: return Inertia::render('Map');
+         return Inertia::render('Map');
     }
 
     // GET /map/pins — returns JSON array of sightings with coordinates
@@ -32,12 +32,25 @@ class MapController extends Controller
         //     ->whereNotNull('lng')
         //     ->select('id', 'species_id', 'user_id', 'lat', 'lng', 'location_name', 'sighted_at');
 
+        //what this means?
+        /*
+        FROM sightings
+            give me: id, species_id, lat, lng, location_name, sighted_at
+        JOIN species (where species.id = sighting.species_id)
+            give me: id, common_name, category, rarity
+
+        */
+        $query = Sighting::with('species:id,common_name,category,rarity,refrence_image') -> whereNotNull('lat') -> whereNotNull('lng') 
+            ->select('id', 'species_id', 'user_id', 'lat', 'lng', 'location_name', 'sighted_at');
+
+
         // Step 2: If logged in, only show this user's pins
-        // if (Auth::check()) {
-        //     $query->where('user_id', Auth::id());
-        // }
+        if (Auth::check()) {
+            $query->where('user_id', Auth::id());
+        }
+
 
         // Step 3: Return as JSON (response()->json() instead of Inertia::render())
-        // return response()->json($query->get());
+        return response()->json($query->get());
     }
 }
