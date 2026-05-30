@@ -21,6 +21,7 @@ class SightingController extends Controller
     public function create(): Response
     {
         // TODO: return Inertia::render('Capture');
+        return Inertia::render('Capture');
     }
 
     // POST /sightings — called when user submits a photo + species ID
@@ -28,20 +29,33 @@ class SightingController extends Controller
     {
         // Step 1: Validate the incoming data
         // If validation fails, Laravel automatically redirects back with errors
+
+        /*
+        User opens Capture page
+        → Browser asks "allow location?" 
+        → User accepts
+        → Vue stores lat/lng
+        → User takes/uploads photo
+        → Vue sends photo + lat + lng together
+        → Laravel receives all of it in $request
+
+        */
         $request->validate([
-            // TODO: add these rules:
-            // 'photo'        => 'required|image|max:10240'  (max 10MB image file)
-            // 'species_id'   => 'required|exists:species,id' (must be a real species)
-            // 'lat'          => 'nullable|numeric|between:-90,90'
-            // 'lng'          => 'nullable|numeric|between:-180,180'
-            // 'notes'        => 'nullable|string|max:1000'
-            // 'ai_confidence'=> 'nullable|numeric|between:0,1'
+            'photo'=> ['required', 'image', 'max:10240'],
+            'species_id'=> ['required', 'exists:species,id'],
+            'lat' => ['nullable', 'numeric', 'between:-90,90'],
+            'lng' => ['nullable', 'numeric', 'between:-180,180'],
+            'notes'=> ['nullable', 'string', 'max:1000'],
+            'ai_confidence' => ['nullable', 'numeric', 'between:0,1'],
         ]);
 
         // Step 2: Save the uploaded photo to disk
         // $file = $request->file('photo');
         // $path = $file->store('sightings', 'public');
         // This saves to storage/app/public/sightings/ and returns the relative path
+
+        $file = $request->file('photo');
+        $path = $file->store('sightings', 'public');
 
         // Step 3: Create an Image record in the database
         // $image = Image::create([
@@ -54,9 +68,29 @@ class SightingController extends Controller
         //     'height'          => getimagesize($file->getRealPath())[1] ?? null,
         //     'file_size_bytes' => $file->getSize(),
         // ]);
+        $image = Image::create([
+            'user_id' => Auth::id(),
+            'file_url' => Storage::url($path),
+            'file_hash' => hash_file('sha256', $file -> getRealPath()),
+            //its browser location not the actual exif data... so...
+            'exif_lat' => $request ->lat,
+            'exif_lng' => $request -> lng,
+            'width' => getImageSize($file->getRealPath())[0] ?? null,
+            'height'=> getimagesize($file->getRealPath())[1] ?? null,
+            'file_size_bytes' => $file->getSize(),
+
+
+
+
+
+
+
+        ]);
 
         // Step 4: Check if this is the first time ANYONE has sighted this species
         // $isFirstGlobal = Sighting::where('species_id', $request->species_id)->doesntExist();
+        $isFirstGlobal = Sighting::where('species_id', $request->species_id)->doesntExist();
+
 
         // Step 5: Create or update the sighting
         // updateOrCreate(['match on these'] , ['set these values'])
@@ -75,14 +109,34 @@ class SightingController extends Controller
         //         'is_first_global' => $isFirstGlobal,
         //     ]
         // );
+        $sighting = Sighting::updateOrCreate(
+            ['user_id' => Auth::id(), 'species_id' => $request -> species_id],
+
+        
+            [
+                'image_id'        => $image->id,
+                'lat'             => $request->lat,
+                'lng'             => $request->lng,
+                'sighted_at'      => now(),
+                'notes'           => $request->notes,
+                'ai_confidence'   => $request->ai_confidence,
+                'is_first_global' => $isFirstGlobal,
+            ]
+        );
 
         // Step 6: If first global sighting, increment the species counter
         // if ($isFirstGlobal) {
         //     Species::find($request->species_id)->increment('total_sightings');
         // }
 
+        if($isFirstGlobal){
+            Species::find($request -> species_id) -> increment('total_sightings');
+
+        }
+
         // Step 7: Redirect to dashboard with a flash message
         // return redirect()->route('dashboard')->with('success', 'Added to your collection!');
+        return redirect()->route('dashboard')->with('success', 'Added to your collection!');
     }
 
     // GET /sightings/{sighting} — show one sighting's detail page
@@ -94,6 +148,8 @@ class SightingController extends Controller
         // TODO:
         // $sighting->load(['species', 'image', 'user']);
         // return Inertia::render('Sightings/Show', ['sighting' => $sighting]);
+        $sighting -> load(['species', 'image', 'user']);
+        return Inertia::render('Sihtings/Show', ['sighting' => $sighting]);
     }
 
     // DELETE /sightings/{sighting}
@@ -104,5 +160,8 @@ class SightingController extends Controller
         // $this->authorize('delete', $sighting);
         // $sighting->delete();
         // return redirect()->route('dashboard');
+        $this->authorize('delete', $sighting);
+        $sighting->delete();
+        return redirect()->route('dashboard');
     }
 }
