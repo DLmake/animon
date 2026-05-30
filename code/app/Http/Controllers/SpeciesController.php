@@ -40,8 +40,10 @@ class SpeciesController extends Controller
         // ->paginate(48) returns a LengthAwarePaginator with links for the Vue pagination
         $species = $query->orderBy('common_name')->paginate(48);
 
-        return Inertia::render('Species/Index', [$species,$userSightingIds,$request->only(['category','search'])
-            // TODO: pass 'species', 'userSightingIds', and 'filters' ($request->only(['category','search']))
+        return Inertia::render('Species/Index', [
+            'species'        => $species,
+            'userSightingIds'=> $userSightingIds,
+            'filters'        => $request->only(['category', 'search']),
         ]);
     }
 
