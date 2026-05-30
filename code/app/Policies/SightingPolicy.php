@@ -20,6 +20,8 @@ class SightingPolicy
         // This compares the logged-in user's ID with the sighting's owner ID.
         // If they match → true (allowed). If not → 403 Forbidden.
         return $user->id === $sighting->user_id;
-        
+
     }
 }
+
+//laravel automaticaly matches this with the Sighting file because of the name 
