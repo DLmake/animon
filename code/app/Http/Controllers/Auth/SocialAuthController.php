@@ -22,7 +22,7 @@ class SocialAuthController extends Controller
     public function redirect(): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         // TODO: return Socialite::driver('google')->redirect();
-        return Socalite::driver('google') -> redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     // GET /auth/google/callback
@@ -38,7 +38,7 @@ class SocialAuthController extends Controller
         // }
 
         try{
-            $googleUser = Socalite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->user();
 
         }catch(\Exception $e){
             return redirect()->route('login')->withErrors(['google' => 'Google login failed.']);
@@ -48,7 +48,8 @@ class SocialAuthController extends Controller
         // $user = User::where('google_id', $googleUser->getId())->first()
         //      ?? User::where('email', $googleUser->getEmail())->first();
 
-        $user = User::where('google_id', $googleUser ->getId()) -> first() ?? User::where('email', $googleUser->getEmail() -> first());
+        $user = User::where('google_id', $googleUser->getId())->first()
+             ?? User::where('email', $googleUser->getEmail())->first();
 
 
         // Step 3a: If user exists, update their google_id and avatar

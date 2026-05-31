@@ -65,7 +65,7 @@ defineProps({ canLogin: Boolean, canRegister: Boolean });
             <div class="nes-container with-title" style="border-color: #cc0000 !important;">
                 <p class="title" style="color: #cc0000 !important;">CAPTURE</p>
                 <div class="text-center py-4">
-                    <div class="text-5xl mb-4">📷</div>
+                    <i class="nes-pokeball mb-4" style="display: inline-block;"></i>
                     <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #fff; margin-bottom: 12px; line-height: 2;">SNAP & IDENTIFY</p>
                     <p class="text-slate-400 text-xs leading-relaxed">Point your camera at any animal, plant or insect. AI identifies it instantly.</p>
                 </div>
@@ -73,7 +73,7 @@ defineProps({ canLogin: Boolean, canRegister: Boolean });
             <div class="nes-container with-title" style="border-color: #1d4ed8 !important;">
                 <p class="title" style="color: #93c5fd !important;">COLLECT</p>
                 <div class="text-center py-4">
-                    <div class="text-5xl mb-4">📖</div>
+                    <i class="nes-ash mb-4" style="display: inline-block;"></i>
                     <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #fff; margin-bottom: 12px; line-height: 2;">BUILD YOUR DEX</p>
                     <p class="text-slate-400 text-xs leading-relaxed">Every species you find gets added to your personal Pokédex collection.</p>
                 </div>
@@ -81,7 +81,11 @@ defineProps({ canLogin: Boolean, canRegister: Boolean });
             <div class="nes-container with-title" style="border-color: #475569 !important;">
                 <p class="title" style="color: #94a3b8 !important;">EXPLORE</p>
                 <div class="text-center py-4">
-                    <div class="text-5xl mb-4">🗺️</div>
+                    <img
+                        src="/pixel-art-illustration-map-pixelated-map-treasure-map-scroll-pixelated-pixel-art-game_1038602-1138.avif"
+                        alt="Pixel map"
+                        style="width: 80px; height: 80px; image-rendering: pixelated; display: block; margin: 0 auto 16px; object-fit: contain;"
+                    />
                     <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #fff; margin-bottom: 12px; line-height: 2;">MAP YOUR FINDS</p>
                     <p class="text-slate-400 text-xs leading-relaxed">See all your sightings pinned on an interactive world map.</p>
                 </div>
