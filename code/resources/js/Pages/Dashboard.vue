@@ -7,19 +7,18 @@ const props = defineProps({
     stats: Object,
 });
 
-const rarityClass = (rarity) => ({
-    common:    { border: '#4b5563', color: '#9ca3af' },
-    uncommon:  { border: '#16a34a', color: '#4ade80' },
-    rare:      { border: '#1d4ed8', color: '#60a5fa' },
+const rarityStyle = (rarity) => ({
+    common:    { border: '#64748b', color: '#94a3b8' },
+    uncommon:  { border: '#15803d', color: '#86efac' },
+    rare:      { border: '#1d4ed8', color: '#93c5fd' },
     epic:      { border: '#7e22ce', color: '#c084fc' },
-    legendary: { border: '#a16207', color: '#facc15' },
-    extinct:   { border: '#991b1b', color: '#f87171' },
-}[rarity] ?? { border: '#4b5563', color: '#9ca3af' });
+    legendary: { border: '#b45309', color: '#fcd34d' },
+    extinct:   { border: '#991b1b', color: '#fca5a5' },
+}[rarity] ?? { border: '#64748b', color: '#94a3b8' });
 
 const categoryEmoji = (cat) => ({
-    mammal: '🦁', bird: '🐦', reptile: '🦎',
-    amphibian: '🐸', insect: '🐛', arachnid: '🕷️',
-    plant: '🌿', fungi: '🍄', fish: '🐟',
+    mammal: '🦁', bird: '🐦', reptile: '🦎', amphibian: '🐸',
+    insect: '🐛', arachnid: '🕷️', plant: '🌿', fungi: '🍄', fish: '🐟',
 }[cat] ?? '❓');
 </script>
 
@@ -27,34 +26,20 @@ const categoryEmoji = (cat) => ({
     <Head title="My Collection" />
     <AuthenticatedLayout>
         <template #header>
-            <h1 style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #4ade80;">
+            <h1 style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #fff;">
                 MY COLLECTION
             </h1>
         </template>
 
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
-            <!-- Stats bar -->
+            <!-- Stats bar — Pokédex screen style -->
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-10">
-                <div class="nes-container is-dark text-center py-4">
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #00ff41;">{{ stats.total }}</p>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #4ade80; margin-top: 8px;">TOTAL</p>
-                </div>
-                <div class="nes-container is-dark text-center py-4">
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #00ff41;">{{ stats.animals }}</p>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #4ade80; margin-top: 8px;">ANIMALS</p>
-                </div>
-                <div class="nes-container is-dark text-center py-4">
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #00ff41;">{{ stats.insects }}</p>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #4ade80; margin-top: 8px;">INSECTS</p>
-                </div>
-                <div class="nes-container is-dark text-center py-4">
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #00ff41;">{{ stats.plants }}</p>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #4ade80; margin-top: 8px;">PLANTS</p>
-                </div>
-                <div class="nes-container is-dark text-center py-4">
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #facc15;">{{ stats.legendary }}</p>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #facc15; margin-top: 8px;">LEGENDARY</p>
+                <div v-for="(stat, label) in { TOTAL: stats.total, ANIMALS: stats.animals, INSECTS: stats.insects, PLANTS: stats.plants, LEGEND: stats.legendary }"
+                     :key="label"
+                     class="nes-container is-dark text-center py-4">
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 22px; color: #fff;">{{ stat }}</p>
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #93c5fd; margin-top: 8px;">{{ label }}</p>
                 </div>
             </div>
 
@@ -62,11 +47,11 @@ const categoryEmoji = (cat) => ({
             <div v-if="sightings.length === 0" class="text-center py-20">
                 <div class="nes-container is-dark mx-auto max-w-sm py-10">
                     <p class="text-5xl mb-6">🔍</p>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #00ff41; line-height: 2; margin-bottom: 16px;">
-                        NO POKEMON FOUND
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #93c5fd; line-height: 2; margin-bottom: 16px;">
+                        NO ENTRIES FOUND
                     </p>
-                    <p class="text-gray-400 text-sm mb-8">Your collection is empty. Go catch some wildlife!</p>
-                    <Link :href="route('capture.create')" class="nes-btn is-success" style="font-size: 8px;">
+                    <p class="text-slate-400 text-sm mb-8">Your Pokédex is empty. Go find some wildlife!</p>
+                    <Link :href="route('capture.create')" class="nes-btn is-primary" style="font-size: 8px;">
                         + CATCH NOW
                     </Link>
                 </div>
@@ -82,24 +67,23 @@ const categoryEmoji = (cat) => ({
                 >
                     <div
                         class="nes-container relative overflow-hidden cursor-pointer transition-transform hover:scale-105"
-                        :style="`border-color: ${rarityClass(s.species?.rarity).border} !important;`"
+                        :style="`border-color: ${rarityStyle(s.species?.rarity).border} !important;`"
                     >
-                        <!-- First global badge -->
+                        <!-- First discovery badge -->
                         <div
                             v-if="s.is_first_sighting"
-                            style="position: absolute; top: 4px; right: 4px; background: #facc15; color: #000; font-family: 'Press Start 2P', monospace; font-size: 6px; padding: 2px 4px; z-index: 10;"
+                            style="position: absolute; top: 4px; right: 4px; background: #cc0000; color: #fff; font-family: 'Press Start 2P', monospace; font-size: 6px; padding: 2px 4px; z-index: 10;"
                         >
                             1ST!
                         </div>
 
                         <!-- Photo -->
-                        <div class="w-full aspect-square overflow-hidden mb-2" style="background: #001a00;">
+                        <div class="w-full aspect-square overflow-hidden mb-2" style="background: #0d1b2a;">
                             <img
                                 v-if="s.image?.file_url"
                                 :src="s.image.file_url"
                                 :alt="s.species?.common_name"
                                 class="w-full h-full object-cover"
-                                style="image-rendering: pixelated;"
                             />
                             <div v-else class="w-full h-full flex items-center justify-center text-4xl">
                                 {{ categoryEmoji(s.species?.category) }}
@@ -107,12 +91,12 @@ const categoryEmoji = (cat) => ({
                         </div>
 
                         <!-- Name -->
-                        <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; line-height: 1.6; margin-bottom: 4px; color: #f9fafb;">
+                        <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; line-height: 1.6; margin-bottom: 4px; color: #f1f5f9;">
                             {{ s.species?.common_name?.toUpperCase() }}
                         </p>
 
                         <!-- Rarity -->
-                        <p :style="`font-family: 'Press Start 2P', monospace; font-size: 6px; color: ${rarityClass(s.species?.rarity).color};`">
+                        <p :style="`font-family: 'Press Start 2P', monospace; font-size: 6px; color: ${rarityStyle(s.species?.rarity).color};`">
                             {{ s.species?.rarity?.toUpperCase() }}
                         </p>
                     </div>

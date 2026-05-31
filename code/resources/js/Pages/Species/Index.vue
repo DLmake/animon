@@ -17,22 +17,22 @@ const categories = [
     { value: 'mammal',    label: 'MAMMALS',   emoji: '🦁' },
     { value: 'bird',      label: 'BIRDS',     emoji: '🐦' },
     { value: 'reptile',   label: 'REPTILES',  emoji: '🦎' },
-    { value: 'amphibian', label: 'AMPHIBIANS',emoji: '🐸' },
+    { value: 'amphibian', label: 'AMPHIBIAN', emoji: '🐸' },
     { value: 'insect',    label: 'INSECTS',   emoji: '🐛' },
-    { value: 'arachnid',  label: 'ARACHNIDS', emoji: '🕷️' },
+    { value: 'arachnid',  label: 'ARACHNID',  emoji: '🕷️' },
     { value: 'plant',     label: 'PLANTS',    emoji: '🌿' },
     { value: 'fungi',     label: 'FUNGI',     emoji: '🍄' },
     { value: 'fish',      label: 'FISH',      emoji: '🐟' },
 ];
 
 const rarityColor = (rarity) => ({
-    common:    '#9ca3af',
-    uncommon:  '#4ade80',
-    rare:      '#60a5fa',
+    common:    '#94a3b8',
+    uncommon:  '#86efac',
+    rare:      '#93c5fd',
     epic:      '#c084fc',
-    legendary: '#facc15',
-    extinct:   '#f87171',
-}[rarity] ?? '#9ca3af');
+    legendary: '#fcd34d',
+    extinct:   '#fca5a5',
+}[rarity] ?? '#94a3b8');
 
 const caught = (id) => props.userSightingIds?.includes(id);
 
@@ -40,10 +40,7 @@ let debounceTimer;
 watch([search, category], () => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-        router.get(route('species.index'), {
-            search:   search.value,
-            category: category.value,
-        }, { preserveState: true });
+        router.get(route('species.index'), { search: search.value, category: category.value }, { preserveState: true });
     }, 300);
 });
 </script>
@@ -52,36 +49,30 @@ watch([search, category], () => {
     <Head title="Pokédex" />
     <AuthenticatedLayout>
         <template #header>
-            <h1 style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #60a5fa;">
-                POKÉDEX
-            </h1>
+            <h1 style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #fff;">POKÉDEX</h1>
         </template>
 
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
-            <!-- Search input -->
-            <div class="nes-container with-title mb-6">
-                <p class="title">SEARCH</p>
+            <!-- Search -->
+            <div class="nes-container with-title mb-6" style="border-color: #cc0000 !important;">
+                <p class="title" style="color: #cc0000 !important;">SEARCH</p>
                 <div class="flex gap-2 items-center">
-                    <span style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #4ade80;">🔍</span>
-                    <input
-                        v-model="search"
-                        type="text"
-                        class="nes-input"
-                        placeholder="Search species..."
-                        style="font-size: 12px;"
-                    />
+                    <span style="font-size: 14px;">🔍</span>
+                    <input v-model="search" type="text" class="nes-input" placeholder="Search species..." style="font-size: 12px;" />
                 </div>
             </div>
 
-            <!-- Category filter buttons -->
+            <!-- Category filters -->
             <div class="flex flex-wrap gap-2 mb-8">
                 <button
                     v-for="cat in categories"
                     :key="cat.value"
                     class="nes-btn"
-                    :class="category === cat.value ? 'is-success' : ''"
                     style="font-size: 7px; padding: 4px 8px;"
+                    :style="category === cat.value
+                        ? 'background:#cc0000!important; color:#fff!important; border-color:#7f0000!important;'
+                        : 'background:#1e2d3d!important; color:#94a3b8!important; border-color:#4a6380!important;'"
                     @click="category = cat.value"
                 >
                     {{ cat.emoji }} {{ cat.label }}
@@ -98,32 +89,28 @@ watch([search, category], () => {
                 >
                     <div
                         class="nes-container text-center cursor-pointer transition-transform hover:scale-105"
-                        :style="caught(s.id) ? `border-color: ${rarityColor(s.rarity)} !important;` : 'border-color: #374151 !important; opacity: 0.6;'"
+                        :style="caught(s.id)
+                            ? `border-color: ${rarityColor(s.rarity)} !important;`
+                            : 'border-color: #263d52 !important; opacity: 0.55;'"
                     >
-                        <!-- Image -->
-                        <div class="w-full aspect-square overflow-hidden mb-2" style="background: #001a00;">
+                        <div class="w-full aspect-square overflow-hidden mb-2" style="background: #0d1b2a;">
                             <img
                                 v-if="s.refrence_image && caught(s.id)"
                                 :src="s.refrence_image"
                                 :alt="s.common_name"
                                 class="w-full h-full object-cover"
-                                :style="caught(s.id) ? '' : 'filter: grayscale(100%) brightness(0.3);'"
                             />
                             <div v-else class="w-full h-full flex items-center justify-center">
                                 <span v-if="caught(s.id)" class="text-3xl">
-                                    {{ { mammal:'🦁', bird:'🐦', reptile:'🦎', amphibian:'🐸', insect:'🐛', arachnid:'🕷️', plant:'🌿', fungi:'🍄', fish:'🐟' }[s.category] ?? '❓' }}
+                                    {{ {mammal:'🦁',bird:'🐦',reptile:'🦎',amphibian:'🐸',insect:'🐛',arachnid:'🕷️',plant:'🌿',fungi:'🍄',fish:'🐟'}[s.category] ?? '❓' }}
                                 </span>
-                                <span v-else style="font-family: 'Press Start 2P', monospace; font-size: 18px; color: #374151;">???</span>
+                                <span v-else style="font-family:'Press Start 2P',monospace; font-size:18px; color:#334155;">???</span>
                             </div>
                         </div>
-
-                        <!-- Name -->
-                        <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; line-height: 1.6; color: #f9fafb;">
+                        <p style="font-family:'Press Start 2P',monospace; font-size:6px; line-height:1.6; color:#f1f5f9;">
                             {{ caught(s.id) ? s.common_name.toUpperCase() : '???' }}
                         </p>
-
-                        <!-- Rarity -->
-                        <p v-if="caught(s.id)" :style="`font-family: 'Press Start 2P', monospace; font-size: 6px; color: ${rarityColor(s.rarity)}; margin-top: 4px;`">
+                        <p v-if="caught(s.id)" :style="`font-family:'Press Start 2P',monospace; font-size:6px; color:${rarityColor(s.rarity)}; margin-top:4px;`">
                             {{ s.rarity.toUpperCase() }}
                         </p>
                     </div>
@@ -136,10 +123,11 @@ watch([search, category], () => {
                     v-for="link in species.links"
                     :key="link.label"
                     class="nes-btn"
-                    :class="link.active ? 'is-primary' : ''"
                     style="font-size: 8px; padding: 4px 10px; min-width: 40px;"
+                    :style="link.active
+                        ? 'background:#cc0000!important; color:#fff!important; border-color:#7f0000!important;'
+                        : !link.url ? 'opacity:0.3; pointer-events:none;' : ''"
                     :disabled="!link.url"
-                    :style="!link.url ? 'opacity: 0.3; pointer-events: none;' : ''"
                     @click="link.url && router.get(link.url)"
                     v-html="link.label"
                 ></button>

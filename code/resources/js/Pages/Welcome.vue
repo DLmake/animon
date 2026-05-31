@@ -7,100 +7,90 @@ defineProps({ canLogin: Boolean, canRegister: Boolean });
 <template>
     <Head title="Animon — Catch them all" />
 
-    <div class="min-h-screen" style="background-color: #0a0a1a; color: #fff;">
+    <div class="min-h-screen" style="background-color: #0f1923; color: #f1f5f9;">
 
-        <!-- Nav -->
-        <nav style="background-color: #c0392b; border-bottom: 6px solid #000;">
+        <!-- Red nav bar -->
+        <nav style="background-color: #cc0000; border-bottom: 6px solid #7f0000;">
             <div class="mx-auto max-w-6xl px-6 py-3 flex justify-between items-center">
-                <span style="font-family: 'Press Start 2P', monospace; font-size: 16px; color: #fff; text-shadow: 2px 2px #000;">
+                <span style="font-family: 'Press Start 2P', monospace; font-size: 16px; color: #fff; text-shadow: 2px 2px #5a0000;">
                     ANIMON
                 </span>
                 <div class="flex gap-3">
-                    <Link v-if="canLogin" :href="route('login')" class="nes-btn" style="font-size: 8px; padding: 4px 10px; background: #111; color: #fff;">
-                        LOGIN
-                    </Link>
-                    <Link v-if="canRegister" :href="route('register')" class="nes-btn is-success" style="font-size: 8px; padding: 4px 10px;">
-                        SIGN UP
-                    </Link>
+                    <Link v-if="canLogin"    :href="route('login')"    class="nes-btn" style="font-size: 8px; padding: 4px 10px; background:#fff!important; color:#333!important; border-color:#999!important;">LOGIN</Link>
+                    <Link v-if="canRegister" :href="route('register')" class="nes-btn is-primary" style="font-size: 8px; padding: 4px 10px;">SIGN UP</Link>
                 </div>
             </div>
         </nav>
 
-        <!-- Hero screen -->
-        <div class="text-center py-16 px-4" style="background: linear-gradient(180deg, #0a0a1a 0%, #001a00 100%);">
-            <!-- Pokédex screen border -->
-            <div class="mx-auto max-w-lg p-1" style="border: 6px solid #333; background: #001a00; box-shadow: inset 0 0 30px #00ff4133, 0 0 20px #00ff4122;">
+        <!-- Hero — the Pokédex screen -->
+        <div class="text-center py-16 px-4" style="background: linear-gradient(180deg, #0f1923 0%, #0d1b2a 100%);">
+            <div class="mx-auto max-w-lg" style="border: 6px solid #334155; background: #0d1b2a; box-shadow: inset 0 0 40px #1d4ed822, 0 0 30px #1d4ed811;">
+                <div py-2 style="background: #cc0000; border-bottom: 4px solid #7f0000; padding: 6px 0;">
+                    <span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #fff; letter-spacing: 4px;">
+                        ● ● ●
+                    </span>
+                </div>
                 <div class="py-12 px-6">
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #00ff41; margin-bottom: 8px;">
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #94a3b8; margin-bottom: 8px; letter-spacing: 2px;">
                         ANIMON SYSTEM v1.0
                     </p>
-                    <h1 style="font-family: 'Press Start 2P', monospace; font-size: 28px; color: #facc15; text-shadow: 3px 3px #000, 0 0 20px #facc1566; margin-bottom: 16px; line-height: 1.4;">
+                    <h1 style="font-family: 'Press Start 2P', monospace; font-size: 30px; color: #fff; text-shadow: 3px 3px #cc0000, 0 0 20px #3b82f644; margin-bottom: 16px; line-height: 1.4;">
                         ANIMON
                     </h1>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #4ade80; margin-bottom: 24px; line-height: 2;">
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 9px; color: #93c5fd; margin-bottom: 24px; line-height: 2;">
                         CATCH REAL WILDLIFE
                     </p>
-                    <p class="text-gray-400 text-sm mb-8" style="line-height: 1.7;">
+                    <p class="text-slate-400 text-sm mb-8" style="line-height: 1.7;">
                         Take a photo. AI identifies the species.<br>
                         Build your real-world Pokédex.
                     </p>
                     <div class="flex justify-center gap-4 flex-wrap">
-                        <Link v-if="canRegister" :href="route('register')" class="nes-btn is-success" style="font-size: 9px;">
+                        <Link v-if="canRegister" :href="route('register')" class="nes-btn is-primary" style="font-size: 9px;">
                             ▶ START GAME
                         </Link>
-                        <Link :href="route('species.index')" class="nes-btn is-primary" style="font-size: 9px;">
+                        <Link :href="route('species.index')" class="nes-btn" style="font-size: 9px; background:#fff!important; color:#333!important;">
                             BROWSE DEX
                         </Link>
                     </div>
+                </div>
+                <!-- Screen bottom bar -->
+                <div style="background: #1e2d3d; border-top: 4px solid #263d52; padding: 8px 0; display: flex; justify-content: center; gap: 12px;">
+                    <span style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #475569;">PRESS START</span>
                 </div>
             </div>
         </div>
 
         <!-- Feature cards -->
         <div class="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="nes-container with-title">
-                <p class="title">CAPTURE</p>
+            <div class="nes-container with-title" style="border-color: #cc0000 !important;">
+                <p class="title" style="color: #cc0000 !important;">CAPTURE</p>
                 <div class="text-center py-4">
                     <div class="text-5xl mb-4">📷</div>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #4ade80; margin-bottom: 12px; line-height: 2;">
-                        SNAP & IDENTIFY
-                    </p>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Point your camera at any animal, plant or insect. AI identifies it instantly.
-                    </p>
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #fff; margin-bottom: 12px; line-height: 2;">SNAP & IDENTIFY</p>
+                    <p class="text-slate-400 text-xs leading-relaxed">Point your camera at any animal, plant or insect. AI identifies it instantly.</p>
                 </div>
             </div>
-
-            <div class="nes-container with-title">
-                <p class="title">COLLECT</p>
+            <div class="nes-container with-title" style="border-color: #1d4ed8 !important;">
+                <p class="title" style="color: #93c5fd !important;">COLLECT</p>
                 <div class="text-center py-4">
                     <div class="text-5xl mb-4">📖</div>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #60a5fa; margin-bottom: 12px; line-height: 2;">
-                        BUILD YOUR DEX
-                    </p>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Every species you find gets added to your personal Pokédex collection.
-                    </p>
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #fff; margin-bottom: 12px; line-height: 2;">BUILD YOUR DEX</p>
+                    <p class="text-slate-400 text-xs leading-relaxed">Every species you find gets added to your personal Pokédex collection.</p>
                 </div>
             </div>
-
-            <div class="nes-container with-title">
-                <p class="title">EXPLORE</p>
+            <div class="nes-container with-title" style="border-color: #475569 !important;">
+                <p class="title" style="color: #94a3b8 !important;">EXPLORE</p>
                 <div class="text-center py-4">
                     <div class="text-5xl mb-4">🗺️</div>
-                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #facc15; margin-bottom: 12px; line-height: 2;">
-                        MAP YOUR FINDS
-                    </p>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        See all your sightings pinned on an interactive world map.
-                    </p>
+                    <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #fff; margin-bottom: 12px; line-height: 2;">MAP YOUR FINDS</p>
+                    <p class="text-slate-400 text-xs leading-relaxed">See all your sightings pinned on an interactive world map.</p>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="text-center py-8 border-t border-gray-800">
-            <p style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #4b5563;">
+        <div class="text-center py-8 border-t border-slate-800">
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #475569;">
                 ANIMON © 2026 — CATCH THEM ALL
             </p>
         </div>
