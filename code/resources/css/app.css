@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'leaflet/dist/leaflet.css';
+@import 'nes.css/css/nes.min.css';
 
 /*
  * ─────────────────────────────────────────────
@@ -30,6 +31,7 @@
 
     /* Typography */
     --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+    --font-pixel: 'Press Start 2P', monospace;
 
     /* Rarity colours — used on badges and card borders */
     --color-rarity-common:    #6b7280;
@@ -40,11 +42,44 @@
 
 /* ─── Base styles ─────────────────────────────── */
 body {
-    background-color: var(--color-surface-base);
+    background-color: #0a0a1a;
     color: #f9fafb;
 }
 
-/* ─── Scrollbar (optional, dark themed) ──────── */
+/* ─── Scrollbar ───────────────────────────────── */
 ::-webkit-scrollbar       { width: 6px; }
-::-webkit-scrollbar-track { background: var(--color-surface-base); }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-track { background: #0a0a1a; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+/* ─── NES.css dark mode overrides ─────────────── */
+.nes-container {
+    background-color: #111827 !important;
+    color: #f9fafb !important;
+}
+.nes-container.with-title > .title {
+    background-color: #111827 !important;
+    color: #4ade80 !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 8px !important;
+}
+.nes-container.is-dark {
+    background-color: #001a00 !important;
+    color: #00ff41 !important;
+    border-color: #00ff41 !important;
+}
+.nes-btn {
+    font-family: 'Press Start 2P', monospace !important;
+}
+.nes-input, .nes-textarea {
+    background-color: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #4b5563 !important;
+}
+.nes-progress {
+    background-color: #1f2937 !important;
+}
+
+/* ─── Pixel font helper ───────────────────────── */
+.font-pixel {
+    font-family: 'Press Start 2P', monospace;
+}
