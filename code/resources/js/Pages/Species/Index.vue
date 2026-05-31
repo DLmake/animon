@@ -13,16 +13,16 @@ const search   = ref(props.filters?.search   ?? '');
 const category = ref(props.filters?.category ?? '');
 
 const categories = [
-    { value: '',          label: 'ALL',       emoji: '🌍' },
-    { value: 'mammal',    label: 'MAMMALS',   emoji: '🦁' },
-    { value: 'bird',      label: 'BIRDS',     emoji: '🐦' },
-    { value: 'reptile',   label: 'REPTILES',  emoji: '🦎' },
-    { value: 'amphibian', label: 'AMPHIBIAN', emoji: '🐸' },
-    { value: 'insect',    label: 'INSECTS',   emoji: '🐛' },
-    { value: 'arachnid',  label: 'ARACHNID',  emoji: '🕷️' },
-    { value: 'plant',     label: 'PLANTS',    emoji: '🌿' },
-    { value: 'fungi',     label: 'FUNGI',     emoji: '🍄' },
-    { value: 'fish',      label: 'FISH',      emoji: '🐟' },
+    { value: '',          label: 'ALL',       icon: null },
+    { value: 'mammal',    label: 'MAMMALS',   icon: '/icons/mammal.png' },
+    { value: 'bird',      label: 'BIRDS',     icon: '/icons/bird.png' },
+    { value: 'reptile',   label: 'REPTILES',  icon: '/icons/reptile.png' },
+    { value: 'amphibian', label: 'AMPHIBIAN', icon: '/icons/amphibian.png' },
+    { value: 'insect',    label: 'INSECTS',   icon: '/icons/insect.png' },
+    { value: 'arachnid',  label: 'ARACHNID',  icon: '/icons/arachnid.png' },
+    { value: 'plant',     label: 'PLANTS',    icon: '/icons/plant.png' },
+    { value: 'fungi',     label: 'FUNGI',     icon: '/icons/fungi.png' },
+    { value: 'fish',      label: 'FISH',      icon: '/icons/fish.png' },
 ];
 
 const rarityColor = (rarity) => ({
@@ -75,7 +75,8 @@ watch([search, category], () => {
                         : 'background:#1e2d3d!important; color:#94a3b8!important; border-color:#4a6380!important;'"
                     @click="category = cat.value"
                 >
-                    {{ cat.emoji }} {{ cat.label }}
+                    <img v-if="cat.icon" :src="cat.icon" style="width:14px; height:14px; image-rendering:pixelated; display:inline-block; vertical-align:middle; margin-right:4px;" />
+                    {{ cat.label }}
                 </button>
             </div>
 
@@ -101,9 +102,7 @@ watch([search, category], () => {
                                 class="w-full h-full object-cover"
                             />
                             <div v-else class="w-full h-full flex items-center justify-center">
-                                <span v-if="caught(s.id)" class="text-3xl">
-                                    {{ {mammal:'🦁',bird:'🐦',reptile:'🦎',amphibian:'🐸',insect:'🐛',arachnid:'🕷️',plant:'🌿',fungi:'🍄',fish:'🐟'}[s.category] ?? '❓' }}
-                                </span>
+                                <img v-if="caught(s.id)" :src="`/icons/${s.category}.png`" style="width:56px; height:56px; image-rendering:pixelated; object-fit:contain;" />
                                 <span v-else style="font-family:'Press Start 2P',monospace; font-size:18px; color:#334155;">???</span>
                             </div>
                         </div>

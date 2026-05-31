@@ -25,13 +25,19 @@ const page = usePage();
                     </div>
                 </div>
 
-                <!-- Right: capture + user -->
-                <div class="flex items-center gap-2">
+                <!-- Right: capture + user (logged in) -->
+                <div v-if="page.props.auth.user" class="flex items-center gap-2">
                     <Link :href="route('capture.create')" class="nes-btn is-primary" style="font-size: 7px; padding: 4px 10px;">+ CATCH</Link>
                     <Link :href="route('profile.edit')" class="nes-btn" style="font-size: 7px; padding: 4px 8px; background: #fff !important; color: #333 !important; border-color: #999 !important;">
                         {{ page.props.auth.user.name.toUpperCase() }}
                     </Link>
                     <Link :href="route('logout')" method="post" as="button" class="nes-btn is-error" style="font-size: 7px; padding: 4px 8px;">OUT</Link>
+                </div>
+
+                <!-- Right: login/register (guest) -->
+                <div v-else class="flex items-center gap-2">
+                    <Link :href="route('login')" class="nes-btn" style="font-size: 7px; padding: 4px 8px; background: #fff !important; color: #333 !important; border-color: #999 !important;">LOGIN</Link>
+                    <Link :href="route('register')" class="nes-btn is-primary" style="font-size: 7px; padding: 4px 10px;">REGISTER</Link>
                 </div>
             </div>
 

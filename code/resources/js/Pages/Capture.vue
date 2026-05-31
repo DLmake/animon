@@ -140,7 +140,12 @@ function submit() { form.post(route('sightings.store')); }
                     <button class="nes-btn is-primary w-full mt-4" style="font-size: 9px; padding: 12px;" :disabled="form.processing" @click="submit">
                         {{ form.processing ? 'SAVING...' : '✓ ADD TO COLLECTION' }}
                     </button>
-                    <p v-if="form.errors.photo" style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #fca5a5; margin-top: 8px;">{{ form.errors.photo }}</p>
+                    <div v-if="Object.keys(form.errors).length" style="margin-top: 8px;">
+                        <p v-for="(msg, field) in form.errors" :key="field"
+                           style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #fca5a5; margin-bottom: 4px;">
+                            ✕ {{ msg }}
+                        </p>
+                    </div>
                 </div>
             </div>
 

@@ -1,58 +1,149 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Animon
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Pokédex-style web app for logging real-world wildlife sightings.
+Take a photo, let AI identify the species, and build your personal collection.
 
-## About Laravel
+**Stack:** Laravel · Vue 3 · Inertia.js · MySQL · Tailwind CSS · NES.css · Leaflet
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Make sure you have the following installed before starting:
 
-## Learning Laravel
+| Tool | Version |
+|------|---------|
+| PHP | 8.2 or higher |
+| Composer | 2.x |
+| Node.js | 18 or higher |
+| npm | 9 or higher |
+| MySQL | 8.x (or MariaDB 10.x) |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Setup
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Clone the repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <your-repo-url>
+cd animon
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install PHP dependencies
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Install JavaScript dependencies
 
-## Code of Conduct
+```bash
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Create your environment file
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Configure the database
 
-## License
+Open `.env` and update these lines with your MySQL credentials:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=animon
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+Then create the database and run migrations:
+
+```bash
+mysql -u root -p -e "CREATE DATABASE animon;"
+php artisan migrate
+```
+
+### 6. Seed the species database
+
+Populates the Pokédex with ~300 Slovenian species pulled from iNaturalist:
+
+```bash
+php artisan db:seed --class=SpeciesSeeder
+```
+
+Or import live data directly from iNaturalist (requires internet):
+
+```bash
+php artisan animon:import-species --limit=300
+```
+
+### 7. Link the storage folder
+
+So uploaded photos are publicly accessible:
+
+```bash
+php artisan storage:link
+```
+
+### 8. Build frontend assets
+
+```bash
+npm run build
+```
+
+### 9. Start the server
+
+```bash
+php artisan serve
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+
+---
+
+## Optional: Google OAuth login
+
+To enable Sign in with Google, add these to your `.env`:
+
+```env
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+```
+
+You can create credentials at [console.cloud.google.com](https://console.cloud.google.com) under **APIs & Services → Credentials**.
+
+---
+
+## Optional: iNaturalist AI identification
+
+To improve species identification accuracy, add an iNaturalist API token:
+
+```env
+INATURALIST_TOKEN=your_token
+```
+
+Get a token at [inaturalist.org/users/api_token](https://www.inaturalist.org/users/api_token).
+Note: tokens expire every 24 hours. The app works without a token but with lower accuracy.
+
+After updating `.env` run:
+
+```bash
+php artisan config:clear
+```
+
+---
+
+## Features
+
+- **Capture** — take or upload a photo, AI identifies the species via iNaturalist
+- **Pokédex** — browse all 300+ Slovenian species, filter by category
+- **My Dex** — personal collection dashboard with rarity-coloured cards
+- **Map** — Leaflet map showing where your sightings were recorded
+- **Google OAuth** — sign in with Google in addition to email/password

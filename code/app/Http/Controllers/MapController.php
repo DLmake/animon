@@ -40,8 +40,10 @@ class MapController extends Controller
             give me: id, common_name, category, rarity
 
         */
-        $query = Sighting::with('species:id,common_name,category,rarity,refrence_image') -> whereNotNull('lat') -> whereNotNull('lng') 
-            ->select('id', 'species_id', 'user_id', 'lat', 'lng', 'location_name', 'sighted_at');
+        $query = Sighting::with('species:id,common_name,category,rarity,refrence_image')
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->select('id', 'species_id', 'user_id', 'lat', 'lng', 'location_name', 'sighted_time');
 
 
         // Step 2: If logged in, only show this user's pins

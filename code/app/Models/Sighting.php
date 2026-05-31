@@ -22,13 +22,13 @@ class Sighting extends Model
         'image_id',
         'location_name',
         'lat',
-        'lang',
+        'lng',
         'altitude',
         'country_code',
         'sighted_time',
         'notes',
         'ai_confidence',
-        'is_first_global',
+        'is_first_sighting',
 
     ];
 

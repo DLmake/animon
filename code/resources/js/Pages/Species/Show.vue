@@ -16,10 +16,7 @@ const rarityColor = (rarity) => ({
     extinct:   '#fca5a5',
 }[rarity] ?? '#94a3b8');
 
-const categoryEmoji = (cat) => ({
-    mammal:'🦁', bird:'🐦', reptile:'🦎', amphibian:'🐸',
-    insect:'🐛', arachnid:'🕷️', plant:'🌿', fungi:'🍄', fish:'🐟',
-}[cat] ?? '❓');
+const categoryIcon = (cat) => `/icons/${cat ?? 'mammal'}.png`;
 </script>
 
 <template>
@@ -33,7 +30,9 @@ const categoryEmoji = (cat) => ({
 
                 <div class="w-full overflow-hidden mb-6" style="height: 240px; background: #0d1b2a;">
                     <img v-if="species.refrence_image" :src="species.refrence_image" :alt="species.common_name" class="w-full h-full object-cover" />
-                    <div v-else class="w-full h-full flex items-center justify-center text-7xl">{{ categoryEmoji(species.category) }}</div>
+                    <div v-else class="w-full h-full flex items-center justify-center">
+                        <img :src="categoryIcon(species.category)" style="width: 120px; height: 120px; image-rendering: pixelated; object-fit: contain;" />
+                    </div>
                 </div>
 
                 <h1 style="font-family:'Press Start 2P',monospace; font-size:13px; color:#fff; margin-bottom:8px; line-height:1.6;">

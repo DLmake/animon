@@ -204,10 +204,21 @@ class SightingController extends Controller
         ];
         $category = $categoryMap[$taxon['iconic_taxon_name'] ?? ''] ?? 'mammal';
 
-        // Try to find the species in our database
+        // Try to find the species in our database — match by scientific name or iNaturalist ID
         $species = Species::where('scientific_name', $taxon['name'])
             ->orWhere('ai_provider_id', (string) $taxon['id'])
             ->first();
+
+        // If not found, create a new entry so species_id is always populated
+        if (!$species) {
+            $species = Species::create([
+                'common_name'     => $taxon['preferred_common_name'] ?? $taxon['name'],
+                'scientific_name' => $taxon['name'],
+                'category'        => $category,
+                'rarity'          => 'common',
+                'ai_provider_id'  => (string) $taxon['id'],
+            ]);
+        }
 
         // Confidence: use combined_score (0-100) divided by 100, or vision_score normalised
         $confidence = isset($top['combined_score'])
