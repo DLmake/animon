@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Sighting;
 use App\Models\Species;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -117,10 +119,10 @@ class SightingController extends Controller
                 'image_id'        => $image->id,
                 'lat'             => $request->lat,
                 'lng'             => $request->lng,
-                'sighted_at'      => now(),
+                'sighted_time'     => now(),
                 'notes'           => $request->notes,
                 'ai_confidence'   => $request->ai_confidence,
-                'is_first_global' => $isFirstGlobal,
+                'is_first_sighting' => $isFirstGlobal,
             ]
         );
 
@@ -149,7 +151,80 @@ class SightingController extends Controller
         // $sighting->load(['species', 'image', 'user']);
         // return Inertia::render('Sightings/Show', ['sighting' => $sighting]);
         $sighting -> load(['species', 'image', 'user']);
-        return Inertia::render('Sihtings/Show', ['sighting' => $sighting]);
+        return Inertia::render('Sightings/Show', ['sighting' => $sighting]);
+    }
+
+    // POST /identify — send photo to iNaturalist vision API, return species suggestion
+    public function identify(Request $request): JsonResponse
+    {
+        $request->validate(['photo' => 'required|image|max:10240']);
+
+        $file = $request->file('photo');
+
+        // Build the request to iNaturalist
+        $pending = Http::timeout(15)
+            ->attach('image', file_get_contents($file->getRealPath()), 'photo.jpg');
+
+        // Attach token if configured
+        $token = config('services.inaturalist.token');
+        if ($token) {
+            $pending = $pending->withToken($token);
+        }
+
+        // Send lat/lng if available — improves accuracy significantly
+        $params = [];
+        if ($request->lat) $params['lat'] = $request->lat;
+        if ($request->lng) $params['lng'] = $request->lng;
+
+        $response = $pending->post('https://api.inaturalist.org/v1/computervision/score_image', $params);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'iNaturalist API error: ' . $response->status()], 422);
+        }
+
+        $top = $response->json('results.0');
+
+        if (!$top) {
+            return response()->json(['error' => 'Could not identify species'], 422);
+        }
+
+        $taxon = $top['taxon'];
+
+        // Map iNaturalist iconic_taxon_name to our category enum
+        $categoryMap = [
+            'Aves'        => 'bird',
+            'Mammalia'    => 'mammal',
+            'Reptilia'    => 'reptile',
+            'Amphibia'    => 'amphibian',
+            'Actinopterygii' => 'fish',
+            'Insecta'     => 'insect',
+            'Arachnida'   => 'arachnid',
+            'Plantae'     => 'plant',
+            'Fungi'       => 'fungi',
+        ];
+        $category = $categoryMap[$taxon['iconic_taxon_name'] ?? ''] ?? 'mammal';
+
+        // Try to find the species in our database
+        $species = Species::where('scientific_name', $taxon['name'])
+            ->orWhere('ai_provider_id', (string) $taxon['id'])
+            ->first();
+
+        // Confidence: use combined_score (0-100) divided by 100, or vision_score normalised
+        $confidence = isset($top['combined_score'])
+            ? round($top['combined_score']) / 100
+            : round($top['vision_score'] / 20, 2);
+        $confidence = min(1, max(0, $confidence));
+
+        return response()->json([
+            'species_id'      => $species?->id,
+            'common_name'     => $taxon['preferred_common_name'] ?? $taxon['name'],
+            'scientific_name' => $taxon['name'],
+            'category'        => $category,
+            'rarity'          => $species?->rarity ?? 'common',
+            'confidence'      => $confidence,
+            'inaturalist_id'  => $taxon['id'],
+            'photo_url'       => $taxon['default_photo']['medium_url'] ?? null,
+        ]);
     }
 
     // DELETE /sightings/{sighting}

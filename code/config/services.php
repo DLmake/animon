@@ -41,4 +41,8 @@ return [
         'redirect'      => env('GOOGLE_REDIRECT_URI', 'http://localhost:8000/auth/google/callback'),
     ],
 
+    'inaturalist' => [
+        'token' => env('INATURALIST_TOKEN'),
+    ],
+
 ];

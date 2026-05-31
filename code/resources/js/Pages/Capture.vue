@@ -40,12 +40,27 @@ function tryGetLocation() {
 
 async function identify() {
     identifying.value = true;
-    // TODO: replace with real AI endpoint
-    await new Promise(r => setTimeout(r, 1500));
-    identified.value = { species_id: null, common_name: 'Unknown Species', scientific_name: '', category: 'animal', rarity: 'common', confidence: 0.87 };
-    form.species_id    = identified.value.species_id;
-    form.ai_confidence = identified.value.confidence;
-    identifying.value  = false;
+    try {
+        const data = new FormData();
+        data.append('photo', form.photo);
+        if (form.lat) data.append('lat', form.lat);
+        if (form.lng) data.append('lng', form.lng);
+
+        const res = await axios.post(route('identify'), data, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        identified.value   = res.data;
+        form.species_id    = res.data.species_id;
+        form.ai_confidence = res.data.confidence;
+    } catch (e) {
+        const msg = e.response?.data?.error ?? 'Could not identify species';
+        identified.value = {
+            species_id: null, common_name: msg,
+            scientific_name: '', category: '', rarity: 'common', confidence: 0,
+        };
+    }
+    identifying.value = false;
 }
 
 function retake() {
@@ -107,17 +122,17 @@ function submit() { form.post(route('sightings.store')); }
                 <p class="title" style="color: #93c5fd !important;">IDENTIFIED!</p>
                 <div class="py-2">
                     <p style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: #fff; margin-bottom: 8px;">
-                        {{ identified.common_name.toUpperCase() }}
+                        {{ identified.common_name?.toUpperCase() ?? 'UNKNOWN' }}
                     </p>
                     <p v-if="identified.scientific_name" class="text-slate-400 text-xs italic mb-4">{{ identified.scientific_name }}</p>
                     <div class="flex gap-4 mb-4">
-                        <span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #93c5fd;">{{ identified.category?.toUpperCase() }}</span>
-                        <span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #94a3b8;">{{ identified.rarity?.toUpperCase() }}</span>
+                        <span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #93c5fd;">{{ identified.category?.toUpperCase() ?? '' }}</span>
+                        <span style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #94a3b8;">{{ identified.rarity?.toUpperCase() ?? '' }}</span>
                     </div>
                     <p style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #94a3b8; margin-bottom: 4px;">
-                        CONFIDENCE: {{ Math.round(identified.confidence * 100) }}%
+                        CONFIDENCE: {{ Math.round((identified.confidence ?? 0) * 100) }}%
                     </p>
-                    <progress class="nes-progress is-primary" :value="Math.round(identified.confidence * 100)" max="100"></progress>
+                    <progress class="nes-progress is-primary" :value="Math.round((identified.confidence ?? 0) * 100)" max="100"></progress>
                     <div class="mt-4">
                         <p style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #94a3b8; margin-bottom: 8px;">NOTES (OPTIONAL):</p>
                         <textarea v-model="form.notes" class="nes-textarea w-full" rows="3" placeholder="Where did you spot it?" style="font-size: 12px;"></textarea>
