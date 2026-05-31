@@ -95,7 +95,7 @@ function submit() { form.post(route('sightings.store')); }
                         <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #93c5fd; line-height: 2;">TAP TO CAPTURE</p>
                     </div>
                 </div>
-                <input ref="fileInput" type="file" accept="image/*" capture="environment" class="hidden" @change="onFileChange" />
+                <input ref="fileInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic" capture="environment" class="hidden" @change="onFileChange" />
             </div>
 
             <!-- Location -->

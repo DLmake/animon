@@ -43,7 +43,7 @@ class SightingController extends Controller
 
         */
         $request->validate([
-            'photo'=> ['required', 'image', 'max:10240'],
+            'photo'=> ['required', 'image', 'mimes:jpg,jpeg,png,webp,heic', 'max:10240'],
             'species_id'=> ['required', 'exists:species,id'],
             'lat' => ['nullable', 'numeric', 'between:-90,90'],
             'lng' => ['nullable', 'numeric', 'between:-180,180'],
@@ -157,7 +157,7 @@ class SightingController extends Controller
     // POST /identify — send photo to iNaturalist vision API, return species suggestion
     public function identify(Request $request): JsonResponse
     {
-        $request->validate(['photo' => 'required|image|max:10240']);
+        $request->validate(['photo' => 'required|image|mimes:jpg,jpeg,png,webp,heic|max:10240']);
 
         $file = $request->file('photo');
 
