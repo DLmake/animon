@@ -62,26 +62,20 @@ DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
 
-Then create the database and run migrations:
+### 6. Import the database
+
+A complete SQL dump is included in the repository (`db.sql`). Import it directly — this creates all tables and loads the full species Pokédex in one step:
 
 ```bash
 mysql -u root -p -e "CREATE DATABASE animon;"
-php artisan migrate
+mysql -u root -p animon < db.sql
 ```
 
-### 6. Seed the species database
-
-Populates the Pokédex with ~300 Slovenian species pulled from iNaturalist:
-
-```bash
-php artisan db:seed --class=SpeciesSeeder
-```
-
-Or import live data directly from iNaturalist (requires internet):
-
-```bash
-php artisan animon:import-species --limit=300
-```
+> **Alternative** — if you prefer to run migrations and seed manually:
+> ```bash
+> php artisan migrate
+> php artisan db:seed --class=SpeciesSeeder
+> ```
 
 ### 7. Link the storage folder
 
