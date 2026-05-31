@@ -148,6 +148,22 @@ function submit() { form.post(route('sightings.store')); }
             <div v-if="preview" class="text-center">
                 <button class="nes-btn is-error" style="font-size: 8px;" @click="retake">✕ RETAKE</button>
             </div>
+
+            <!-- Accepted formats -->
+            <div class="mt-8 nes-container is-dark py-3">
+                <p style="font-family: 'Press Start 2P', monospace; font-size: 7px; color: #64748b; margin-bottom: 8px;">
+                    ACCEPTED FORMATS:
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span v-for="fmt in ['JPG', 'JPEG', 'PNG', 'WEBP', 'HEIC']" :key="fmt"
+                        class="nes-btn" style="font-size: 6px; padding: 2px 6px; pointer-events: none; background: #1e2d3d !important; color: #93c5fd !important; border-color: #334155 !important;">
+                        {{ fmt }}
+                    </span>
+                </div>
+                <p style="font-family: 'Press Start 2P', monospace; font-size: 6px; color: #475569; margin-top: 8px; line-height: 2;">
+                    MAX SIZE: 10MB
+                </p>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>

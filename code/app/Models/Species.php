@@ -60,7 +60,7 @@ class Species extends Model
     public function sightings(): HasMany
     {
         // TODO: return $this->hasMany(Sighting::class);
-        return $this->hasMany(Sighnting::class);
+        return $this->hasMany(Sighting::class);
     }
 
     // HELPER METHOD: Returns a Tailwind CSS class based on rarity
