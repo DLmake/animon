@@ -76,7 +76,7 @@ function submit() { form.post(route('sightings.store')); }
                 >
                     <img v-if="preview" :src="preview" alt="Preview" class="w-full h-full object-cover" />
                     <div v-else class="text-center">
-                        <div class="text-6xl mb-4">📷</div>
+                        <i class="nes-pokeball" style="display: block; margin: 0 auto 16px;"></i>
                         <p style="font-family: 'Press Start 2P', monospace; font-size: 8px; color: #93c5fd; line-height: 2;">TAP TO CAPTURE</p>
                     </div>
                 </div>

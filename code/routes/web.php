@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
 
 
     // TODO: Capture flow
-    Route::get('/capture', [SightingController::class,'create'])->name('sightings.create');  
+    Route::get('/capture', [SightingController::class,'create'])->name('capture.create');
 
     Route::post('/sightings', [SightingController::class, 'store'])->name('sightings.store'); 
 
